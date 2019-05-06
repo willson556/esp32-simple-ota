@@ -12,6 +12,12 @@ This library has been tested with ESP-IDF v3.1. Other versions may work but _at 
 
 #### Code
 
+Add this repository as a submodule in your `components` folder:
+
+```sh
+git submodule add https://github.com/willson556/esp32-simple-ota.git components/ota
+```
+
 In your `main.cpp` file, instantiate an `OTAManager`:
 
 ```cpp
