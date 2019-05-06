@@ -3,11 +3,6 @@
 #include <functional>
 #include <thread>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-#include "esp_http_client.h"
-
 namespace HttpsOta {
 
 class Ota {
