@@ -4,7 +4,7 @@ The goal of this project is to provide a simple, lightweight way of performing O
 
 ## ESP-IDF Support
 
-This library has been tested with ESP-IDF v3.1. Other versions may work but _at least_ v3.1 is known to be required for [libstdc++ threading support](https://github.com/espressif/esp-idf/issues/690#issuecomment-359146044).
+This library has been tested with ESP-IDF v3.1. Other versions may work but _at least_ v3.0 is known to be required for [libstdc++ threading support](https://github.com/espressif/esp-idf/issues/690#issuecomment-359146044).
 
 ## Getting Started
 
