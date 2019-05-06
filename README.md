@@ -2,6 +2,16 @@
 
 The goal of this project is to provide a simple, lightweight way of performing OTA updates.
 
+## Table of Contents
+
+- [ESP-IDF Support](#esp-idf-support)
+- [Getting Started](#getting-started)
+  - [Client Side](#client-side)
+    - [Code](#code)
+    - [Certificate](#certificate)
+    - [SDK Configuration](#sdk-configuration)
+  - [Server Side](#server-side)
+
 ## ESP-IDF Support
 
 This library has been tested with ESP-IDF v3.1. Other versions may work but _at least_ v3.0 is known to be required for [libstdc++ threading support](https://github.com/espressif/esp-idf/issues/690#issuecomment-359146044).
