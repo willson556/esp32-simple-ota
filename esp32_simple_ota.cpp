@@ -1,4 +1,4 @@
-#include "ota.hpp"
+#include "esp32_simple_ota.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -6,10 +6,9 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include <esp_log.h>
-
 #include <esp_https_ota.h>
+
 #include <cJSON.h>
 
 static const char *TAG = "ota";
@@ -18,8 +17,7 @@ extern const uint8_t server_cert_pem_end[] asm("_binary_ca_cert_pem_end");
 
 namespace {
 
-template <TickType_t milliseconds>
-void delay()
+void delay(TickType_t milliseconds)
 {
     vTaskDelay(milliseconds / portTICK_PERIOD_MS);
 }
@@ -37,26 +35,30 @@ char* copy_response(esp_http_client_handle_t client, size_t content_length) {
 
 } // namespace
 
-namespace HttpsOta {
+namespace esp32_simple_ota {
 
 esp_err_t ota_http_event_handler(esp_http_client_event_t *e) {
     return 0;
 }
 
-void Ota::thread_func() {
+void OTAManager::thread_func() {
     while (thread_running) {
         constexpr size_t url_buffer_size{256};
         char url[url_buffer_size]{0};
 
         if (update_available(url, url_buffer_size)) {
-            install_update(url);
+            if (!safeToUpdateCallback || safeToUpdateCallback()) {
+                install_update(url);
+            } else if (safeToUpdateCallback) {
+                ESP_LOGI(TAG, "Deferring update; not allowed by callback.");
+            }
         }
 
-        delay<1 * 60 * 1000>(); // Check for update every 10 minutes
+        delay(updateCheckInterval * 1000);
     }
 }
 
-bool Ota::update_available(char* url, size_t url_buffer_size) {
+bool OTAManager::update_available(char* url, size_t url_buffer_size) {
     bool update_found {false};
 
     esp_http_client_config_t config {0};
@@ -126,7 +128,7 @@ bool Ota::update_available(char* url, size_t url_buffer_size) {
     return update_found;    
 }
 
-void Ota::install_update(const char *url) {
+void OTAManager::install_update(const char *url) {
     esp_http_client_config_t config = {0};
     config.url = url;
     config.cert_pem = (char *)server_cert_pem_start;
@@ -144,4 +146,4 @@ void Ota::install_update(const char *url) {
     }
 }
 
-}
+} // namespace esp32_simple_ota
